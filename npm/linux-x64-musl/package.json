@@ -1,0 +1,23 @@
+{
+  "name": "sysinfo-linux-x64-musl",
+  "version": "0.0.0",
+  "os": [
+    "linux"
+  ],
+  "cpu": [
+    "x64"
+  ],
+  "main": "sysinfo.linux-x64-musl.node",
+  "files": [
+    "sysinfo.linux-x64-musl.node"
+  ],
+  "description": "Query system information",
+  "license": "MIT",
+  "engines": {
+    "node": ">= 10"
+  },
+  "repository": "https://github.com/Brooooooklyn/sysinfo.git",
+  "libc": [
+    "musl"
+  ]
+}

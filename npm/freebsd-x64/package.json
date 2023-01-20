@@ -1,0 +1,20 @@
+{
+  "name": "sysinfo-freebsd-x64",
+  "version": "0.0.0",
+  "os": [
+    "freebsd"
+  ],
+  "cpu": [
+    "x64"
+  ],
+  "main": "sysinfo.freebsd-x64.node",
+  "files": [
+    "sysinfo.freebsd-x64.node"
+  ],
+  "description": "Query system information",
+  "license": "MIT",
+  "engines": {
+    "node": ">= 10"
+  },
+  "repository": "https://github.com/Brooooooklyn/sysinfo.git"
+}

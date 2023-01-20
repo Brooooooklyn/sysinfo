@@ -1,0 +1,20 @@
+{
+  "name": "sysinfo-linux-arm-gnueabihf",
+  "version": "0.0.0",
+  "os": [
+    "linux"
+  ],
+  "cpu": [
+    "arm"
+  ],
+  "main": "sysinfo.linux-arm-gnueabihf.node",
+  "files": [
+    "sysinfo.linux-arm-gnueabihf.node"
+  ],
+  "description": "Query system information",
+  "license": "MIT",
+  "engines": {
+    "node": ">= 10"
+  },
+  "repository": "https://github.com/Brooooooklyn/sysinfo.git"
+}
