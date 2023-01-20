@@ -21,15 +21,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@napi-rs/cpu-features@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "@napi-rs/cpu-features@workspace:."
-  dependencies:
-    "@napi-rs/cli": ^2.14.4
-    ava: ^5.1.1
-  languageName: unknown
-  linkType: soft
-
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
@@ -1863,6 +1854,15 @@ __metadata:
   checksum: ee3d71c1d25f7f15d4a849e72b0c5f430df7cd8f702cf082fdbec5642a9546be6557766745655fa3a3e9c88f7c7eed849f2d74457b5b72cb9d94a779c0c8a948
   languageName: node
   linkType: hard
+
+"sysinfo@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "sysinfo@workspace:."
+  dependencies:
+    "@napi-rs/cli": ^2.14.4
+    ava: ^5.1.1
+  languageName: unknown
+  linkType: soft
 
 "tar@npm:^6.1.11, tar@npm:^6.1.2":
   version: 6.1.13

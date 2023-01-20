@@ -1,7 +1,8 @@
 #![deny(clippy::all)]
 
-#[macro_use]
-extern crate napi_derive;
+use sysinfo::SystemExt;
+
+use napi_derive::napi;
 
 #[napi(object)]
 pub struct CpuFeatures {
@@ -141,10 +142,10 @@ pub fn cpu_features() -> CpuFeatures {
 
   let sysinfo =
     sysinfo::System::new_with_specifics(RefreshKind::new().with_cpu(CpuRefreshKind::new()));
-  let cpu = sysinfo.cpus().get(0);
+  let cpu = sysinfo.global_cpu_info();
   CpuFeatures {
     arch: std::env::consts::ARCH.to_string(),
-    brand: cpu.map(|cpu| cpu.brand().to_string()),
+    brand: Some(cpu.brand().to_string()),
     family: None,
     model: None,
     stepping_id: None,
@@ -281,5 +282,141 @@ pub fn cpu_features() -> CpuFeatures {
       adx: is_x86_feature_detected!("adx"),
       rtm: is_x86_feature_detected!("rtm"),
     },
+  }
+}
+
+#[napi(object)]
+/// A Object representing system load average value.
+///
+/// ```js
+/// import { SysInfo } from '@napi-rs/sysinfo';
+/// const s = new SysInfo();
+/// const loadAvg = s.loadAverage();
+///
+/// console.log(
+///   `one minute: ${loadAvg.one}%, five minutes: ${loadAvg.five}%, fifteen minutes: ${loadAvg.fifteen}%`,
+/// )
+/// ```
+pub struct LoadAvg {
+  /// Average load within one minute.
+  pub one: f64,
+  /// Average load within five minutes.
+  pub five: f64,
+  /// Average load within fifteen minutes.
+  pub fifteen: f64,
+}
+
+impl From<sysinfo::LoadAvg> for LoadAvg {
+  fn from(value: sysinfo::LoadAvg) -> Self {
+    Self {
+      one: value.one,
+      five: value.five,
+      fifteen: value.fifteen,
+    }
+  }
+}
+
+#[napi]
+pub struct SysInfo {
+  system: sysinfo::System,
+}
+
+#[napi]
+impl SysInfo {
+  #[napi(constructor)]
+  pub fn new() -> Self {
+    Self {
+      system: sysinfo::System::new_with_specifics(sysinfo::RefreshKind::everything()),
+    }
+  }
+
+  #[napi]
+  pub fn refresh_memory(&mut self) {
+    self.system.refresh_memory();
+  }
+
+  #[napi]
+  pub fn total_memory(&self) -> u64 {
+    self.system.total_memory()
+  }
+
+  #[napi]
+  pub fn free_memory(&self) -> u64 {
+    self.system.free_memory()
+  }
+
+  #[napi]
+  pub fn available_memory(&self) -> u64 {
+    self.system.available_memory()
+  }
+
+  #[napi]
+  pub fn used_memory(&self) -> u64 {
+    self.system.used_memory()
+  }
+
+  #[napi]
+  pub fn total_swap(&self) -> u64 {
+    self.system.total_swap()
+  }
+
+  #[napi]
+  pub fn free_swap(&self) -> u64 {
+    self.system.free_swap()
+  }
+
+  #[napi]
+  pub fn used_swap(&self) -> u64 {
+    self.system.used_swap()
+  }
+
+  #[napi]
+  pub fn uptime(&self) {
+    self.system.uptime();
+  }
+
+  #[napi]
+  pub fn boot_time(&self) -> u64 {
+    self.system.boot_time()
+  }
+
+  #[napi]
+  pub fn system_name(&self) -> Option<String> {
+    self.system.name()
+  }
+
+  #[napi]
+  pub fn long_os_version(&self) -> Option<String> {
+    self.system.long_os_version()
+  }
+
+  #[napi]
+  pub fn host_name(&self) -> Option<String> {
+    self.system.host_name()
+  }
+
+  #[napi]
+  pub fn kernel_version(&self) -> Option<String> {
+    self.system.kernel_version()
+  }
+
+  #[napi]
+  pub fn os_version(&self) -> Option<String> {
+    self.system.os_version()
+  }
+
+  #[napi]
+  pub fn distribution(&self) -> String {
+    self.system.distribution_id()
+  }
+
+  #[napi]
+  pub fn load_average(&self) -> LoadAvg {
+    self.system.load_average().into()
+  }
+
+  #[napi]
+  pub fn refresh_components_list(&mut self) {
+    self.system.refresh_components_list();
   }
 }

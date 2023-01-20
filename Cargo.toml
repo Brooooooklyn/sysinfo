@@ -7,7 +7,7 @@ version = "0.0.0"
 crate-type = ["cdylib"]
 
 [dependencies]
-napi = { version = "2", default-features = false, features = ["napi3"] }
+napi = { version = "2", default-features = false, features = ["napi6"] }
 napi-derive = "2"
 sysinfo = "0.27.7"
 

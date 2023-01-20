@@ -12,16 +12,87 @@ export interface CpuFeatures {
   flags: CpuFeaturesFlags
 }
 export interface CpuFeaturesFlags {
-  neon: boolean
+  asimd: boolean
   pmull: boolean
+  fp: boolean
+  fp16: boolean
+  sve: boolean
   crc: boolean
-  crypto: boolean
+  lse: boolean
+  lse2: boolean
+  rdm: boolean
+  rcpc: boolean
+  rcpc2: boolean
+  dotprod: boolean
+  tme: boolean
+  fhm: boolean
+  dit: boolean
+  flagm: boolean
+  ssbs: boolean
+  sb: boolean
+  paca: boolean
+  pacg: boolean
+  dpb: boolean
+  dpb2: boolean
+  sve2: boolean
+  sve2Aes: boolean
+  sve2Sm4: boolean
+  sve2Sha3: boolean
+  sve2Bitperm: boolean
+  frintts: boolean
+  i8Mm: boolean
+  f32Mm: boolean
+  f64Mm: boolean
+  bf16: boolean
+  rand: boolean
+  bti: boolean
+  mte: boolean
+  jsconv: boolean
+  fcma: boolean
   aes: boolean
   sha2: boolean
-  i8Mm: boolean
-  v7: boolean
-  vfp2: boolean
-  vfp3: boolean
-  vfp4: boolean
+  sha3: boolean
+  sm4: boolean
 }
 export function cpuFeatures(): CpuFeatures
+/**
+ * A Object representing system load average value.
+ *
+ * ```js
+ * import { SysInfo } from '@napi-rs/sysinfo';
+ * const s = new SysInfo();
+ * const loadAvg = s.loadAverage();
+ *
+ * console.log(
+ *   `one minute: ${loadAvg.one}%, five minutes: ${loadAvg.five}%, fifteen minutes: ${loadAvg.fifteen}%`,
+ * )
+ * ```
+ */
+export interface LoadAvg {
+  /** Average load within one minute. */
+  one: number
+  /** Average load within five minutes. */
+  five: number
+  /** Average load within fifteen minutes. */
+  fifteen: number
+}
+export class SysInfo {
+  constructor()
+  refreshMemory(): void
+  totalMemory(): bigint
+  freeMemory(): bigint
+  availableMemory(): bigint
+  usedMemory(): bigint
+  totalSwap(): bigint
+  freeSwap(): bigint
+  usedSwap(): bigint
+  uptime(): void
+  bootTime(): bigint
+  systemName(): string | null
+  longOsVersion(): string | null
+  hostName(): string | null
+  kernelVersion(): string | null
+  osVersion(): string | null
+  distribution(): string
+  loadAverage(): LoadAvg
+}

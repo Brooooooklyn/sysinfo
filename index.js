@@ -26,24 +26,24 @@ switch (platform) {
   case 'android':
     switch (arch) {
       case 'arm64':
-        localFileExisted = existsSync(join(__dirname, 'cpu-features.android-arm64.node'))
+        localFileExisted = existsSync(join(__dirname, 'sysinfo.android-arm64.node'))
         try {
           if (localFileExisted) {
-            nativeBinding = require('./cpu-features.android-arm64.node')
+            nativeBinding = require('./sysinfo.android-arm64.node')
           } else {
-            nativeBinding = require('@napi-rs/cpu-features-android-arm64')
+            nativeBinding = require('sysinfo-android-arm64')
           }
         } catch (e) {
           loadError = e
         }
         break
       case 'arm':
-        localFileExisted = existsSync(join(__dirname, 'cpu-features.android-arm-eabi.node'))
+        localFileExisted = existsSync(join(__dirname, 'sysinfo.android-arm-eabi.node'))
         try {
           if (localFileExisted) {
-            nativeBinding = require('./cpu-features.android-arm-eabi.node')
+            nativeBinding = require('./sysinfo.android-arm-eabi.node')
           } else {
-            nativeBinding = require('@napi-rs/cpu-features-android-arm-eabi')
+            nativeBinding = require('sysinfo-android-arm-eabi')
           }
         } catch (e) {
           loadError = e
@@ -57,13 +57,13 @@ switch (platform) {
     switch (arch) {
       case 'x64':
         localFileExisted = existsSync(
-          join(__dirname, 'cpu-features.win32-x64-msvc.node')
+          join(__dirname, 'sysinfo.win32-x64-msvc.node')
         )
         try {
           if (localFileExisted) {
-            nativeBinding = require('./cpu-features.win32-x64-msvc.node')
+            nativeBinding = require('./sysinfo.win32-x64-msvc.node')
           } else {
-            nativeBinding = require('@napi-rs/cpu-features-win32-x64-msvc')
+            nativeBinding = require('sysinfo-win32-x64-msvc')
           }
         } catch (e) {
           loadError = e
@@ -71,13 +71,13 @@ switch (platform) {
         break
       case 'ia32':
         localFileExisted = existsSync(
-          join(__dirname, 'cpu-features.win32-ia32-msvc.node')
+          join(__dirname, 'sysinfo.win32-ia32-msvc.node')
         )
         try {
           if (localFileExisted) {
-            nativeBinding = require('./cpu-features.win32-ia32-msvc.node')
+            nativeBinding = require('./sysinfo.win32-ia32-msvc.node')
           } else {
-            nativeBinding = require('@napi-rs/cpu-features-win32-ia32-msvc')
+            nativeBinding = require('sysinfo-win32-ia32-msvc')
           }
         } catch (e) {
           loadError = e
@@ -85,13 +85,13 @@ switch (platform) {
         break
       case 'arm64':
         localFileExisted = existsSync(
-          join(__dirname, 'cpu-features.win32-arm64-msvc.node')
+          join(__dirname, 'sysinfo.win32-arm64-msvc.node')
         )
         try {
           if (localFileExisted) {
-            nativeBinding = require('./cpu-features.win32-arm64-msvc.node')
+            nativeBinding = require('./sysinfo.win32-arm64-msvc.node')
           } else {
-            nativeBinding = require('@napi-rs/cpu-features-win32-arm64-msvc')
+            nativeBinding = require('sysinfo-win32-arm64-msvc')
           }
         } catch (e) {
           loadError = e
@@ -102,23 +102,23 @@ switch (platform) {
     }
     break
   case 'darwin':
-    localFileExisted = existsSync(join(__dirname, 'cpu-features.darwin-universal.node'))
+    localFileExisted = existsSync(join(__dirname, 'sysinfo.darwin-universal.node'))
     try {
       if (localFileExisted) {
-        nativeBinding = require('./cpu-features.darwin-universal.node')
+        nativeBinding = require('./sysinfo.darwin-universal.node')
       } else {
-        nativeBinding = require('@napi-rs/cpu-features-darwin-universal')
+        nativeBinding = require('sysinfo-darwin-universal')
       }
       break
     } catch {}
     switch (arch) {
       case 'x64':
-        localFileExisted = existsSync(join(__dirname, 'cpu-features.darwin-x64.node'))
+        localFileExisted = existsSync(join(__dirname, 'sysinfo.darwin-x64.node'))
         try {
           if (localFileExisted) {
-            nativeBinding = require('./cpu-features.darwin-x64.node')
+            nativeBinding = require('./sysinfo.darwin-x64.node')
           } else {
-            nativeBinding = require('@napi-rs/cpu-features-darwin-x64')
+            nativeBinding = require('sysinfo-darwin-x64')
           }
         } catch (e) {
           loadError = e
@@ -126,13 +126,13 @@ switch (platform) {
         break
       case 'arm64':
         localFileExisted = existsSync(
-          join(__dirname, 'cpu-features.darwin-arm64.node')
+          join(__dirname, 'sysinfo.darwin-arm64.node')
         )
         try {
           if (localFileExisted) {
-            nativeBinding = require('./cpu-features.darwin-arm64.node')
+            nativeBinding = require('./sysinfo.darwin-arm64.node')
           } else {
-            nativeBinding = require('@napi-rs/cpu-features-darwin-arm64')
+            nativeBinding = require('sysinfo-darwin-arm64')
           }
         } catch (e) {
           loadError = e
@@ -146,12 +146,12 @@ switch (platform) {
     if (arch !== 'x64') {
       throw new Error(`Unsupported architecture on FreeBSD: ${arch}`)
     }
-    localFileExisted = existsSync(join(__dirname, 'cpu-features.freebsd-x64.node'))
+    localFileExisted = existsSync(join(__dirname, 'sysinfo.freebsd-x64.node'))
     try {
       if (localFileExisted) {
-        nativeBinding = require('./cpu-features.freebsd-x64.node')
+        nativeBinding = require('./sysinfo.freebsd-x64.node')
       } else {
-        nativeBinding = require('@napi-rs/cpu-features-freebsd-x64')
+        nativeBinding = require('sysinfo-freebsd-x64')
       }
     } catch (e) {
       loadError = e
@@ -162,26 +162,26 @@ switch (platform) {
       case 'x64':
         if (isMusl()) {
           localFileExisted = existsSync(
-            join(__dirname, 'cpu-features.linux-x64-musl.node')
+            join(__dirname, 'sysinfo.linux-x64-musl.node')
           )
           try {
             if (localFileExisted) {
-              nativeBinding = require('./cpu-features.linux-x64-musl.node')
+              nativeBinding = require('./sysinfo.linux-x64-musl.node')
             } else {
-              nativeBinding = require('@napi-rs/cpu-features-linux-x64-musl')
+              nativeBinding = require('sysinfo-linux-x64-musl')
             }
           } catch (e) {
             loadError = e
           }
         } else {
           localFileExisted = existsSync(
-            join(__dirname, 'cpu-features.linux-x64-gnu.node')
+            join(__dirname, 'sysinfo.linux-x64-gnu.node')
           )
           try {
             if (localFileExisted) {
-              nativeBinding = require('./cpu-features.linux-x64-gnu.node')
+              nativeBinding = require('./sysinfo.linux-x64-gnu.node')
             } else {
-              nativeBinding = require('@napi-rs/cpu-features-linux-x64-gnu')
+              nativeBinding = require('sysinfo-linux-x64-gnu')
             }
           } catch (e) {
             loadError = e
@@ -191,26 +191,26 @@ switch (platform) {
       case 'arm64':
         if (isMusl()) {
           localFileExisted = existsSync(
-            join(__dirname, 'cpu-features.linux-arm64-musl.node')
+            join(__dirname, 'sysinfo.linux-arm64-musl.node')
           )
           try {
             if (localFileExisted) {
-              nativeBinding = require('./cpu-features.linux-arm64-musl.node')
+              nativeBinding = require('./sysinfo.linux-arm64-musl.node')
             } else {
-              nativeBinding = require('@napi-rs/cpu-features-linux-arm64-musl')
+              nativeBinding = require('sysinfo-linux-arm64-musl')
             }
           } catch (e) {
             loadError = e
           }
         } else {
           localFileExisted = existsSync(
-            join(__dirname, 'cpu-features.linux-arm64-gnu.node')
+            join(__dirname, 'sysinfo.linux-arm64-gnu.node')
           )
           try {
             if (localFileExisted) {
-              nativeBinding = require('./cpu-features.linux-arm64-gnu.node')
+              nativeBinding = require('./sysinfo.linux-arm64-gnu.node')
             } else {
-              nativeBinding = require('@napi-rs/cpu-features-linux-arm64-gnu')
+              nativeBinding = require('sysinfo-linux-arm64-gnu')
             }
           } catch (e) {
             loadError = e
@@ -219,13 +219,13 @@ switch (platform) {
         break
       case 'arm':
         localFileExisted = existsSync(
-          join(__dirname, 'cpu-features.linux-arm-gnueabihf.node')
+          join(__dirname, 'sysinfo.linux-arm-gnueabihf.node')
         )
         try {
           if (localFileExisted) {
-            nativeBinding = require('./cpu-features.linux-arm-gnueabihf.node')
+            nativeBinding = require('./sysinfo.linux-arm-gnueabihf.node')
           } else {
-            nativeBinding = require('@napi-rs/cpu-features-linux-arm-gnueabihf')
+            nativeBinding = require('sysinfo-linux-arm-gnueabihf')
           }
         } catch (e) {
           loadError = e
@@ -246,6 +246,7 @@ if (!nativeBinding) {
   throw new Error(`Failed to load native binding`)
 }
 
-const { cpuFeatures } = nativeBinding
+const { cpuFeatures, SysInfo } = nativeBinding
 
 module.exports.cpuFeatures = cpuFeatures
+module.exports.SysInfo = SysInfo
