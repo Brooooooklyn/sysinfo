@@ -246,7 +246,8 @@ if (!nativeBinding) {
   throw new Error(`Failed to load native binding`)
 }
 
-const { cpuFeatures, SysInfo } = nativeBinding
+const { Cpu, cpuFeatures, SysInfo } = nativeBinding
 
+module.exports.Cpu = Cpu
 module.exports.cpuFeatures = cpuFeatures
 module.exports.SysInfo = SysInfo

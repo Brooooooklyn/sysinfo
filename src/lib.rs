@@ -1,8 +1,13 @@
 #![deny(clippy::all)]
 
+use cpu::Cpu;
+use napi::{bindgen_prelude::Reference, Env, Result};
 use sysinfo::SystemExt;
 
 use napi_derive::napi;
+
+mod cpu;
+mod sys;
 
 #[napi(object)]
 pub struct CpuFeatures {
@@ -328,6 +333,18 @@ impl SysInfo {
     Self {
       system: sysinfo::System::new_with_specifics(sysinfo::RefreshKind::everything()),
     }
+  }
+
+  #[napi]
+  pub fn global_cpu_info(&self, env: Env, this: Reference<SysInfo>) -> Result<Cpu> {
+    let cpu = this.share_with(env, |sys| Ok(sys.system.global_cpu_info()))?;
+    Ok(Cpu { inner: &cpu })
+  }
+
+  #[napi]
+  pub fn cpus(&self, env: Env, this: Reference<SysInfo>) -> Result<Vec<Cpu>> {
+    let cpus = this.share_with(env, |sys| Ok(sys.system.cpus()))?;
+    Ok(cpus.iter().map(|inner| Cpu { inner }).collect())
   }
 
   #[napi]

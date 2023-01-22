@@ -7,6 +7,10 @@ import { cpuFeatures } from '@napi-rs/sysinfo'
 
 console.log(cpuFeatures())
 ```
+<details>
+  <summary>
+    <code>cpuFeatures()</code> output
+  </summary>
 
 ```js
 {
@@ -56,4 +60,29 @@ console.log(cpuFeatures())
     sm4: false
   }
 }
+```
+</details>
+
+## `sysinfo`
+
+### `CPU info`
+
+```js
+import { SysInfo } from '@napi-rs/sysinfo'
+
+const sysinfo = new SysInfo()
+
+for (const cpu of sysinfo.cpus()) {
+  console.log(cpu.brand(), cpu.name(), cpu.frequency())
+}
+// Apple M1 Max cpu0 2427256522240n
+// Apple M1 Max cpu1 2427256522240n
+// Apple M1 Max cpu2 3299134883328n
+// Apple M1 Max cpu3 3299134883328n
+// Apple M1 Max cpu4 3299134883328n
+// Apple M1 Max cpu5 3299134883328n
+// Apple M1 Max cpu6 3299134883328n
+// Apple M1 Max cpu7 3299134883328n
+// Apple M1 Max cpu8 3299134883328n
+// Apple M1 Max cpu9 3299134883328n
 ```

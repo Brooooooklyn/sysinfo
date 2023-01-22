@@ -9,4 +9,7 @@ test('cpuFeatures', (t) => {
 test('SysInfo', (t) => {
   const sysinfo = new SysInfo()
   t.notThrows(() => sysinfo.refreshMemory())
+  for (const cpu of sysinfo.cpus()) {
+    t.is(typeof cpu.frequency(), 'number')
+  }
 })
