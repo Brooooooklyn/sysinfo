@@ -1,3 +1,3 @@
-# `sysinfo-linux-x64-gnu`
+# `@napi-rs/sysinfo-linux-x64-gnu`
 
-This is the **x86_64-unknown-linux-gnu** binary for `sysinfo`
+This is the **x86_64-unknown-linux-gnu** binary for `@napi-rs/sysinfo`

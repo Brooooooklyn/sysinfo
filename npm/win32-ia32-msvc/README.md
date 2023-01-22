@@ -1,3 +1,3 @@
-# `sysinfo-win32-ia32-msvc`
+# `@napi-rs/sysinfo-win32-ia32-msvc`
 
-This is the **i686-pc-windows-msvc** binary for `sysinfo`
+This is the **i686-pc-windows-msvc** binary for `@napi-rs/sysinfo`

@@ -1,5 +1,5 @@
 {
-  "name": "sysinfo-darwin-arm64",
+  "name": "@napi-rs/sysinfo-darwin-arm64",
   "version": "0.0.1",
   "os": [
     "darwin"
@@ -14,7 +14,7 @@
   "description": "Query system information",
   "license": "MIT",
   "engines": {
-    "node": ">= 10"
+    "node": ">= 14"
   },
   "repository": "https://github.com/Brooooooklyn/sysinfo.git"
 }
