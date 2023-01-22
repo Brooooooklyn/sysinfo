@@ -10,6 +10,7 @@ test('SysInfo', (t) => {
   const sysinfo = new SysInfo()
   t.notThrows(() => sysinfo.refreshMemory())
   for (const cpu of sysinfo.cpus()) {
+    console.info(`CPU ${cpu.name()} frequency: ${cpu.frequency()} MHz`)
     t.is(typeof cpu.frequency(), 'number')
   }
 })
