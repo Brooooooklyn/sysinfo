@@ -3,7 +3,9 @@ import test from 'ava'
 import { cpuFeatures, SysInfo } from '../index.js'
 
 test('cpuFeatures', (t) => {
-  t.notThrows(() => cpuFeatures())
+  const { arch } = cpuFeatures()
+  console.info(`CPU architecture: ${arch}`)
+  t.is(typeof arch, 'string')
 })
 
 test('SysInfo', (t) => {
