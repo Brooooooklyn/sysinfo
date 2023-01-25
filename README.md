@@ -1,5 +1,11 @@
 # `@napi-rs/sysinfo`
 
+![CI](https://github.com/Brooooooklyn/sysinfo/workflows/CI/badge.svg)
+[![install size](https://packagephobia.com/badge?p=@napi-rs/sysinfo)](https://packagephobia.com/result?p=@napi-rs/sysinfo)
+[![Downloads](https://img.shields.io/npm/dm/@napi-rs/sysinfo.svg?sanitize=true)](https://npmcharts.com/compare/@napi-rs/sysinfo?minimal=true)
+
+> 🚀 Help me to become a full-time open-source developer by [sponsoring me on Github](https://github.com/sponsors/Brooooooklyn)
+
 ## `cpuFeatures`
 
 ```js
