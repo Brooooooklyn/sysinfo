@@ -22,9 +22,9 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@napi-rs/cli": "^2.14.4",
-    "ava": "^5.1.1",
-    "systeminformation": "^5.17.3"
+    "@napi-rs/cli": "^2.16.2",
+    "ava": "^5.3.1",
+    "systeminformation": "^5.18.10"
   },
   "ava": {
     "timeout": "3m"
@@ -41,7 +41,7 @@
     "universal": "napi universal",
     "version": "napi version"
   },
-  "packageManager": "yarn@3.3.1",
+  "packageManager": "yarn@3.6.1",
   "repository": "https://github.com/Brooooooklyn/sysinfo.git",
   "description": "Query system information"
 }
