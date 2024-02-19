@@ -1,7 +1,6 @@
 use napi_derive::napi;
 #[cfg(all(target_arch = "aarch64", target_os = "macos"))]
 use once_cell::sync::Lazy;
-use sysinfo::CpuExt;
 
 #[cfg(all(target_arch = "aarch64", target_os = "macos"))]
 /// (efficiency, performance)

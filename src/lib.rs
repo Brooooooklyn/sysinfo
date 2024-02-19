@@ -2,7 +2,6 @@
 
 use cpu::Cpu;
 use napi::{bindgen_prelude::Reference, Env, Result};
-use sysinfo::SystemExt;
 
 use napi_derive::napi;
 
@@ -143,7 +142,7 @@ pub fn cpu_features() -> CpuFeatures {
   #[cfg(target_arch = "aarch64")]
   use std::arch::is_aarch64_feature_detected;
 
-  use sysinfo::{CpuExt, CpuRefreshKind, RefreshKind, SystemExt};
+  use sysinfo::{CpuRefreshKind, RefreshKind};
 
   let sysinfo =
     sysinfo::System::new_with_specifics(RefreshKind::new().with_cpu(CpuRefreshKind::new()));
@@ -389,51 +388,51 @@ impl SysInfo {
 
   #[napi]
   pub fn uptime(&self) {
-    self.system.uptime();
+    sysinfo::System::uptime();
   }
 
   #[napi]
   pub fn boot_time(&self) -> u64 {
-    self.system.boot_time()
+    sysinfo::System::boot_time()
   }
 
   #[napi]
   pub fn system_name(&self) -> Option<String> {
-    self.system.name()
+    sysinfo::System::name()
   }
 
   #[napi]
   pub fn long_os_version(&self) -> Option<String> {
-    self.system.long_os_version()
+    sysinfo::System::long_os_version()
   }
 
   #[napi]
   pub fn host_name(&self) -> Option<String> {
-    self.system.host_name()
+    sysinfo::System::host_name()
   }
 
   #[napi]
   pub fn kernel_version(&self) -> Option<String> {
-    self.system.kernel_version()
+    sysinfo::System::kernel_version()
   }
 
   #[napi]
   pub fn os_version(&self) -> Option<String> {
-    self.system.os_version()
+    sysinfo::System::os_version()
   }
 
   #[napi]
   pub fn distribution(&self) -> String {
-    self.system.distribution_id()
+    sysinfo::System::distribution_id()
   }
 
   #[napi]
   pub fn load_average(&self) -> LoadAvg {
-    self.system.load_average().into()
+    sysinfo::System::load_average().into()
   }
 
   #[napi]
   pub fn refresh_components_list(&mut self) {
-    self.system.refresh_components_list();
+    self.system.refresh_all();
   }
 }
