@@ -41,7 +41,7 @@
     "universal": "napi universal",
     "version": "napi version"
   },
-  "packageManager": "yarn@4.0.1",
+  "packageManager": "yarn@4.1.0",
   "repository": "https://github.com/Brooooooklyn/sysinfo.git",
   "description": "Query system information"
 }
