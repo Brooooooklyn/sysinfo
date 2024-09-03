@@ -156,13 +156,3 @@ impl From<libc::c_int> for KernStatus {
     }
   }
 }
-
-#[repr(C)]
-#[derive(Debug, Clone, Copy)]
-pub struct ClockInfo {
-  pub hz: libc::c_int,
-  pub tick: libc::c_int,
-  pub tickadj: libc::c_int,
-  pub stathz: libc::c_int,
-  pub profhz: libc::c_int,
-}

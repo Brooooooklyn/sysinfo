@@ -6,8 +6,8 @@ use once_cell::sync::Lazy;
 /// (efficiency, performance)
 static CORE_FREQUENCY: Lazy<napi::Result<(u64, u64)>> = Lazy::new(|| unsafe {
   use core_foundation::{
-    base::{kCFAllocatorDefault, CFType, TCFType},
-    data::{CFData, CFDataGetBytePtr},
+    base::{kCFAllocatorDefault, CFRange, CFType, TCFType},
+    data::{CFData, CFDataGetBytes, CFDataGetLength},
     dictionary::{CFDictionary, CFMutableDictionary, CFMutableDictionaryRef},
     string::CFString,
   };
@@ -67,34 +67,41 @@ static CORE_FREQUENCY: Lazy<napi::Result<(u64, u64)>> = Lazy::new(|| unsafe {
 
     if let Some(name) = properties.get(CFString::new("name")).downcast::<CFData>() {
       if std::str::from_utf8_unchecked(name.bytes()).to_lowercase() == "pmgr\0" {
-        let mut clock_info = std::mem::MaybeUninit::<ClockInfo>::uninit();
-        let mut clock_info_size = std::mem::size_of::<ClockInfo>();
-        libc::sysctlbyname(
-          "kern.clockrate\0".as_ptr().cast(),
-          clock_info.as_mut_ptr().cast(),
-          &mut clock_info_size,
-          std::ptr::null_mut(),
-          0,
-        );
-
-        let clock_info = clock_info.assume_init();
-        if let Some(freq) = properties
+        if let Some(obj) = properties
           .find(CFString::new("voltage-states1-sram"))
           .and_then(|cf| cf.downcast::<CFData>())
         {
-          let freq = CFDataGetBytePtr(freq.as_concrete_TypeRef());
-          let freq = freq as *const u64;
-          let freq = *freq;
-          efficiency_core_frequency = freq / clock_info.hz as u64 / 1000_1000;
+          let obj = obj.as_concrete_TypeRef();
+          let obj_len = CFDataGetLength(obj);
+          let obj_val = vec![0u8; obj_len as usize];
+          CFDataGetBytes(obj, CFRange::init(0, obj_len), obj_val.as_ptr().cast_mut());
+          let items_count = (obj_len / 8) as usize;
+          let [mut freqs, mut volts] = [vec![0u32; items_count], vec![0u32; items_count]];
+          for (i, x) in obj_val.chunks_exact(8).enumerate() {
+            volts[i] = u32::from_le_bytes([x[4], x[5], x[6], x[7]]);
+            freqs[i] = u32::from_le_bytes([x[0], x[1], x[2], x[3]]);
+            freqs[i] = freqs[i] / 1000 / 1000; // as MHz
+          }
+
+          efficiency_core_frequency = *freqs.last().unwrap() as u64;
         }
-        if let Some(freq) = properties
+        if let Some(obj) = properties
           .find(CFString::new("voltage-states5-sram"))
           .and_then(|cf| cf.downcast::<CFData>())
         {
-          let freq = CFDataGetBytePtr(freq.as_concrete_TypeRef());
-          let freq = freq as *const u64;
-          let freq = *freq / clock_info.hz as u64 / 1000_1000;
-          performance_core_frequency = freq;
+          let obj = obj.as_concrete_TypeRef();
+          let obj_len = CFDataGetLength(obj);
+          let obj_val = vec![0u8; obj_len as usize];
+          CFDataGetBytes(obj, CFRange::init(0, obj_len), obj_val.as_ptr().cast_mut());
+          let items_count = (obj_len / 8) as usize;
+          let [mut freqs, mut volts] = [vec![0u32; items_count], vec![0u32; items_count]];
+          for (i, x) in obj_val.chunks_exact(8).enumerate() {
+            volts[i] = u32::from_le_bytes([x[4], x[5], x[6], x[7]]);
+            freqs[i] = u32::from_le_bytes([x[0], x[1], x[2], x[3]]);
+            freqs[i] = freqs[i] / 1000 / 1000; // as MHz
+          }
+
+          performance_core_frequency = *freqs.last().unwrap() as u64;
         }
       }
     }

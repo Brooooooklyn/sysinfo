@@ -146,7 +146,7 @@ pub fn cpu_features() -> CpuFeatures {
 
   let sysinfo =
     sysinfo::System::new_with_specifics(RefreshKind::new().with_cpu(CpuRefreshKind::new()));
-  let cpu = sysinfo.global_cpu_info();
+  let cpu = &sysinfo.cpus()[0];
   CpuFeatures {
     arch: std::env::consts::ARCH.to_string(),
     brand: Some(cpu.brand().to_string()),
@@ -332,12 +332,6 @@ impl SysInfo {
     Self {
       system: sysinfo::System::new_with_specifics(sysinfo::RefreshKind::everything()),
     }
-  }
-
-  #[napi]
-  pub fn global_cpu_info(&self, env: Env, this: Reference<SysInfo>) -> Result<Cpu> {
-    let cpu = this.share_with(env, |sys| Ok(sys.system.global_cpu_info()))?;
-    Ok(Cpu { inner: &cpu })
   }
 
   #[napi]
