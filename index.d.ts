@@ -87,7 +87,6 @@ export declare class Cpu {
 }
 export declare class SysInfo {
   constructor()
-  globalCpuInfo(): Cpu
   cpus(): Array<Cpu>
   refreshMemory(): void
   totalMemory(): bigint
