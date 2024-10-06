@@ -9,7 +9,7 @@ crate-type = ["cdylib"]
 [dependencies]
 napi = { version = "2", default-features = false, features = ["napi6"] }
 napi-derive = "2"
-sysinfo = "0.31"
+sysinfo = "0.32"
 
 [target.'cfg(all(target_arch = "aarch64", target_os = "macos"))'.dependencies]
 core-foundation = "0.10"
