@@ -144,8 +144,9 @@ pub fn cpu_features() -> CpuFeatures {
 
   use sysinfo::{CpuRefreshKind, RefreshKind};
 
-  let sysinfo =
-    sysinfo::System::new_with_specifics(RefreshKind::new().with_cpu(CpuRefreshKind::new()));
+  let sysinfo = sysinfo::System::new_with_specifics(
+    RefreshKind::everything().with_cpu(CpuRefreshKind::everything()),
+  );
   let cpu = &sysinfo.cpus()[0];
   CpuFeatures {
     arch: std::env::consts::ARCH.to_string(),
