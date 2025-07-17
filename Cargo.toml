@@ -7,8 +7,8 @@ version = "0.0.0"
 crate-type = ["cdylib"]
 
 [dependencies]
-napi = { version = "2", default-features = false, features = ["napi6"] }
-napi-derive = "2"
+napi = { version = "3", default-features = false, features = ["napi6"] }
+napi-derive = "3"
 sysinfo = "0.36"
 
 [target.'cfg(all(target_arch = "aarch64", target_os = "macos"))'.dependencies]
