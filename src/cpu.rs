@@ -25,7 +25,7 @@ static CORE_FREQUENCY: Lazy<napi::Result<(u64, u64)>> = Lazy::new(|| unsafe {
       format!("IOMasterPort failed with {:?}", KernStatus::from(kr)),
     ));
   }
-  let platform_device_dictionary = IOServiceMatching(b"AppleARMIODevice\0".as_ptr().cast());
+  let platform_device_dictionary = IOServiceMatching(c"AppleARMIODevice".as_ptr().cast());
   let mut iterator = std::mem::MaybeUninit::<io_iterator_t>::uninit();
   let kr = IOServiceGetMatchingServices(
     master_port,
@@ -134,7 +134,7 @@ static EFFICIENCY_CLUSTER_TYPE: Lazy<napi::Result<std::collections::HashMap<u32,
     let mut master_port: mach_port_t = MACH_PORT_NULL as _;
     let mut cluster_types = HashMap::new();
 
-    let platform_device_dictionary = IOServiceMatching(b"IOPlatformDevice\0".as_ptr().cast());
+    let platform_device_dictionary = IOServiceMatching(c"IOPlatformDevice".as_ptr().cast());
     let kr = IOMasterPort(kIOMasterPortDefault, &mut master_port);
     if kr != KERN_SUCCESS {
       return Err(napi::Error::new(
@@ -216,7 +216,7 @@ static EFFICIENCY_CLUSTER_TYPE: Lazy<napi::Result<std::collections::HashMap<u32,
   });
 
 #[cfg(all(target_arch = "aarch64", target_os = "macos"))]
-#[napi::module_init]
+#[napi_derive::module_init]
 fn pre_init() {
   let _ = &*CORE_FREQUENCY;
   let _ = &*EFFICIENCY_CLUSTER_TYPE;
@@ -267,11 +267,14 @@ impl Cpu {
     }
     #[cfg(all(target_arch = "aarch64", target_os = "macos"))]
     {
-      let (efficiency_core_frequency, performance_core_frequency) =
-        CORE_FREQUENCY.as_ref().map_err(|err| err.clone())?;
+      use napi::Error;
+
+      let (efficiency_core_frequency, performance_core_frequency) = CORE_FREQUENCY
+        .as_ref()
+        .map_err(|err| Error::new(err.status, err.reason.clone()))?;
       let efficiency_cluster_type = EFFICIENCY_CLUSTER_TYPE
         .as_ref()
-        .map_err(|err| err.clone())?;
+        .map_err(|err| Error::new(err.status, err.reason.clone()))?;
 
       if let Ok(c) = self.inner.name().parse::<u32>() {
         match efficiency_cluster_type.get(&(if c == 0 { 0 } else { c - 1 })) {
