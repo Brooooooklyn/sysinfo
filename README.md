@@ -92,3 +92,30 @@ for (const cpu of sysinfo.cpus()) {
 // Apple M1 Max cpu8 3298
 // Apple M1 Max cpu9 3298
 ```
+
+### `Process info`
+
+```js
+import { SysInfo } from '@napi-rs/sysinfo'
+
+const sysinfo = new SysInfo()
+
+// Refresh processes information
+sysinfo.refreshProcesses()
+
+// Get all processes
+const processes = sysinfo.processes()
+console.log(`Found ${processes.length} processes`)
+
+// Get current process
+const currentProcess = sysinfo.processByPid(process.pid)
+if (currentProcess) {
+  console.log(`Name: ${currentProcess.name()}`)
+  console.log(`Memory: ${Number(currentProcess.memory())} bytes`)
+  console.log(`CPU: ${currentProcess.cpuUsage()}%`)
+}
+
+// Search processes by name
+const nodeProcesses = sysinfo.processesByName('node')
+console.log(`Found ${nodeProcesses.length} node processes`)
+```
