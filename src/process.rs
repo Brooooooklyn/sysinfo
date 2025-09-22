@@ -1,6 +1,8 @@
 use napi_derive::napi;
-use sysinfo::{Process, ProcessStatus as SysProcessStatus, Signal as SysSignal, DiskUsage as SysDiskUsage};
 use std::collections::HashMap;
+use sysinfo::{
+  DiskUsage as SysDiskUsage, Process, ProcessStatus as SysProcessStatus, Signal as SysSignal,
+};
 
 /// Process status enumeration
 #[napi]
@@ -354,10 +356,16 @@ impl From<&Process> for ProcessWrapper {
       pid: process.pid().as_u32(),
       parent: process.parent().map(|pid| pid.as_u32()),
       name: process.name().to_string_lossy().to_string(),
-      cmd: process.cmd().iter().map(|s| s.to_string_lossy().to_string()).collect(),
+      cmd: process
+        .cmd()
+        .iter()
+        .map(|s| s.to_string_lossy().to_string())
+        .collect(),
       exe: process.exe().map(|path| path.to_string_lossy().to_string()),
       cwd: process.cwd().map(|path| path.to_string_lossy().to_string()),
-      root: process.root().map(|path| path.to_string_lossy().to_string()),
+      root: process
+        .root()
+        .map(|path| path.to_string_lossy().to_string()),
       memory: process.memory(),
       virtual_memory: process.virtual_memory(),
       cpu_usage: process.cpu_usage(),

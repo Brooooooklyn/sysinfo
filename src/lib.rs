@@ -1,8 +1,8 @@
 #![deny(clippy::all)]
 
 use cpu::Cpu;
-use process::ProcessWrapper;
 use napi::{bindgen_prelude::Reference, Env, Result};
+use process::ProcessWrapper;
 
 use napi_derive::napi;
 
@@ -460,19 +460,29 @@ impl SysInfo {
   #[napi]
   pub fn refresh_processes(&mut self, remove_dead: Option<bool>) -> u32 {
     let remove_dead_processes = remove_dead.unwrap_or(true);
-    self.system.refresh_processes(sysinfo::ProcessesToUpdate::All, remove_dead_processes) as u32
+    self
+      .system
+      .refresh_processes(sysinfo::ProcessesToUpdate::All, remove_dead_processes) as u32
   }
 
   /// Refresh specific processes by PIDs with detailed control
   #[napi]
-  pub fn refresh_processes_specifics(&mut self, pids: Vec<u32>, remove_dead: Option<bool>, refresh_config: Option<ProcessRefreshConfig>) -> u32 {
-    let pids: Vec<sysinfo::Pid> = pids.into_iter().map(|pid| sysinfo::Pid::from(pid as usize)).collect();
+  pub fn refresh_processes_specifics(
+    &mut self,
+    pids: Vec<u32>,
+    remove_dead: Option<bool>,
+    refresh_config: Option<ProcessRefreshConfig>,
+  ) -> u32 {
+    let pids: Vec<sysinfo::Pid> = pids
+      .into_iter()
+      .map(|pid| sysinfo::Pid::from(pid as usize))
+      .collect();
     let remove_dead_processes = remove_dead.unwrap_or(true);
-    
+
     // ?
     let refresh_kind = if let Some(config) = refresh_config {
       let mut kind = sysinfo::ProcessRefreshKind::nothing();
-      
+
       if config.memory.unwrap_or(true) {
         kind = kind.with_memory();
       }
@@ -500,7 +510,7 @@ impl SysInfo {
       if config.tasks.unwrap_or(false) {
         kind = kind.with_tasks();
       }
-      
+
       kind
     } else {
       sysinfo::ProcessRefreshKind::nothing()
@@ -509,18 +519,19 @@ impl SysInfo {
         .with_disk_usage()
         .with_exe(sysinfo::UpdateKind::OnlyIfNotSet)
     };
-    
+
     self.system.refresh_processes_specifics(
       sysinfo::ProcessesToUpdate::Some(&pids),
       remove_dead_processes,
-      refresh_kind
+      refresh_kind,
     ) as u32
   }
 
   /// Get all processes
   #[napi]
   pub fn processes(&self) -> Vec<ProcessWrapper> {
-    self.system
+    self
+      .system
       .processes()
       .values()
       .map(|process| ProcessWrapper::from(process))
@@ -530,7 +541,8 @@ impl SysInfo {
   /// Get process by PID
   #[napi]
   pub fn process_by_pid(&self, pid: u32) -> Option<ProcessWrapper> {
-    self.system
+    self
+      .system
       .process(sysinfo::Pid::from(pid as usize))
       .map(|process| ProcessWrapper::from(process))
   }
@@ -538,7 +550,8 @@ impl SysInfo {
   /// Get processes by name
   #[napi]
   pub fn processes_by_name(&self, name: String) -> Vec<ProcessWrapper> {
-    self.system
+    self
+      .system
       .processes_by_name(name.as_ref())
       .map(|process| ProcessWrapper::from(process))
       .collect()
@@ -547,7 +560,8 @@ impl SysInfo {
   /// Get processes by exact name
   #[napi]
   pub fn processes_by_exact_name(&self, name: String) -> Vec<ProcessWrapper> {
-    self.system
+    self
+      .system
       .processes_by_exact_name(name.as_ref())
       .map(|process| ProcessWrapper::from(process))
       .collect()
