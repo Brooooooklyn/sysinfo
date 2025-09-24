@@ -10,6 +10,50 @@ export declare class Cpu {
   brand(): string
 }
 
+/** A process running on the system */
+export declare class ProcessWrapper {
+  /** Returns the process identifier (PID) */
+  pid(): number
+  /** Returns the parent process identifier (PPID) */
+  parent(): number | null
+  /** Returns the process name */
+  name(): string
+  /** Returns the command line arguments */
+  cmd(): Array<string>
+  /** Returns the process executable path */
+  exe(): string | null
+  /** Returns the process current working directory */
+  cwd(): string | null
+  /** Returns the process root directory */
+  root(): string | null
+  /** Returns the amount of memory currently used by the process in bytes */
+  memory(): bigint
+  /** Returns the amount of virtual memory used by the process in bytes */
+  virtualMemory(): bigint
+  /** Returns the CPU usage percentage (0.0 to 100.0) */
+  cpuUsage(): number
+  /** Returns the disk usage information */
+  diskUsage(): DiskUsage
+  /** Returns the process status */
+  status(): ProcessStatus
+  /** Returns the process start time (seconds since epoch) */
+  startTime(): bigint
+  /** Returns the process run time in seconds */
+  runTime(): bigint
+  /** Returns the user ID of the process owner */
+  userId(): string | null
+  /** Returns the effective user ID of the process */
+  effectiveUserId(): string | null
+  /** Returns the group ID of the process */
+  groupId(): string | null
+  /** Returns the effective group ID of the process */
+  effectiveGroupId(): string | null
+  /** Returns the session ID of the process */
+  sessionId(): number | null
+  /** Returns the environment variables of the process */
+  environ(): Record<string, string>
+}
+
 export declare class SysInfo {
   constructor()
   cpus(): Array<Cpu>
@@ -31,6 +75,18 @@ export declare class SysInfo {
   distribution(): string
   loadAverage(): LoadAvg
   refreshComponentsList(): void
+  /** Refresh processes information with detailed control */
+  refreshProcesses(removeDead?: boolean | undefined | null): number
+  /** Refresh specific processes by PIDs with detailed control */
+  refreshProcessesSpecifics(pids: Array<number>, removeDead?: boolean | undefined | null, refreshConfig?: ProcessRefreshConfig | undefined | null): number
+  /** Get all processes */
+  processes(): Array<ProcessWrapper>
+  /** Get process by PID */
+  processByPid(pid: number): ProcessWrapper | null
+  /** Get processes by name */
+  processesByName(name: string): Array<ProcessWrapper>
+  /** Get processes by exact name */
+  processesByExactName(name: string): Array<ProcessWrapper>
 }
 
 export declare function cpuFeatures(): CpuFeatures
@@ -45,47 +101,69 @@ export interface CpuFeatures {
 }
 
 export interface CpuFeaturesFlags {
-  asimd: boolean
-  pmull: boolean
-  fp: boolean
-  fp16: boolean
-  sve: boolean
-  crc: boolean
-  lse: boolean
-  lse2: boolean
-  rdm: boolean
-  rcpc: boolean
-  rcpc2: boolean
-  dotprod: boolean
-  tme: boolean
-  fhm: boolean
-  dit: boolean
-  flagm: boolean
-  ssbs: boolean
-  sb: boolean
-  paca: boolean
-  pacg: boolean
-  dpb: boolean
-  dpb2: boolean
-  sve2: boolean
-  sve2Aes: boolean
-  sve2Sm4: boolean
-  sve2Sha3: boolean
-  sve2Bitperm: boolean
-  frintts: boolean
-  i8Mm: boolean
-  f32Mm: boolean
-  f64Mm: boolean
-  bf16: boolean
-  rand: boolean
-  bti: boolean
-  mte: boolean
-  jsconv: boolean
-  fcma: boolean
+  fpu: boolean
   aes: boolean
-  sha2: boolean
-  sha3: boolean
-  sm4: boolean
+  pclmulqdq: boolean
+  rdrand: boolean
+  rdseed: boolean
+  tsc: boolean
+  mmx: boolean
+  sse: boolean
+  sse2: boolean
+  sse3: boolean
+  ssse3: boolean
+  sse41: boolean
+  sse42: boolean
+  sse4A: boolean
+  sha: boolean
+  avx: boolean
+  avx2: boolean
+  avx512F: boolean
+  avx512Cd: boolean
+  avx512Er: boolean
+  avx512Pf: boolean
+  avx512Bw: boolean
+  avx512Dq: boolean
+  avx512Vl: boolean
+  avx512Ifma: boolean
+  avx512Vbmi: boolean
+  avx512Vpopcntdq: boolean
+  avx512Vbmi2: boolean
+  avx512Gfni: boolean
+  avx512Vaes: boolean
+  avx512Vpclmulqdq: boolean
+  avx512Vnni: boolean
+  avx512Bitalg: boolean
+  avx512Bf16: boolean
+  avx512Vp2Intersect: boolean
+  f16C: boolean
+  fma: boolean
+  bmi1: boolean
+  bmi2: boolean
+  abm: boolean
+  lzcnt: boolean
+  tbm: boolean
+  popcnt: boolean
+  fxsr: boolean
+  xsave: boolean
+  xsaveopt: boolean
+  xsaves: boolean
+  xsavec: boolean
+  cmpxchg16B: boolean
+  adx: boolean
+  rtm: boolean
+}
+
+/** Disk usage information for a process */
+export interface DiskUsage {
+  /** Number of bytes read from disk */
+  readBytes: number
+  /** Number of bytes written to disk */
+  writtenBytes: number
+  /** Total number of bytes read */
+  totalReadBytes: number
+  /** Total number of bytes written */
+  totalWrittenBytes: number
 }
 
 /**
@@ -108,4 +186,124 @@ export interface LoadAvg {
   five: number
   /** Average load within fifteen minutes. */
   fifteen: number
+}
+
+/** Process refresh configuration for controlling what information to update */
+export interface ProcessRefreshConfig {
+  /** Refresh memory information (default: true) */
+  memory?: boolean
+  /** Refresh CPU usage information (default: true) */
+  cpu?: boolean
+  /** Refresh disk usage information (default: true) */
+  diskUsage?: boolean
+  /** Refresh executable path information (default: true) */
+  exe?: boolean
+  /** Refresh command line arguments (default: false) */
+  cmd?: boolean
+  /** Refresh environment variables (default: false) */
+  environ?: boolean
+  /** Refresh current working directory (default: false) */
+  cwd?: boolean
+  /** Refresh user information (default: false) */
+  user?: boolean
+  /** Refresh tasks/threads information (default: false) */
+  tasks?: boolean
+}
+
+/** Process status enumeration */
+export declare const enum ProcessStatus {
+  /** Process is idle */
+  Idle = 0,
+  /** Process is running */
+  Run = 1,
+  /** Process is sleeping in an interruptible wait */
+  Sleep = 2,
+  /** Process is stopped */
+  Stop = 3,
+  /** Process is a zombie */
+  Zombie = 4,
+  /** Process is being traced */
+  Tracing = 5,
+  /** Process is dead/uninterruptible sleep */
+  Dead = 6,
+  /** Process is wakekill */
+  Wakekill = 7,
+  /** Process is waking */
+  Waking = 8,
+  /** Process is parked */
+  Parked = 9,
+  /** Process is blocked on a lock */
+  LockBlocked = 10,
+  /** Process is waiting in uninterruptible disk sleep */
+  UninterruptibleDiskSleep = 11,
+  /** Process status is unknown */
+  Unknown = 12
+}
+
+/** Unix signal enumeration */
+export declare const enum Signal {
+  /** Hangup detected on controlling terminal */
+  Hangup = 0,
+  /** Interrupt from keyboard */
+  Interrupt = 1,
+  /** Quit from keyboard */
+  Quit = 2,
+  /** Illegal instruction */
+  Illegal = 3,
+  /** Trace/breakpoint trap */
+  Trap = 4,
+  /** Abort signal */
+  Abort = 5,
+  /** IOT trap */
+  IOT = 6,
+  /** Bus error */
+  Bus = 7,
+  /** Floating point exception */
+  FloatingPointException = 8,
+  /** Kill signal */
+  Kill = 9,
+  /** User-defined signal 1 */
+  User1 = 10,
+  /** Invalid memory reference */
+  Segv = 11,
+  /** User-defined signal 2 */
+  User2 = 12,
+  /** Broken pipe */
+  Pipe = 13,
+  /** Timer signal */
+  Alarm = 14,
+  /** Termination signal */
+  Term = 15,
+  /** Child stopped or terminated */
+  Child = 16,
+  /** Continue if stopped */
+  Continue = 17,
+  /** Stop process */
+  Stop = 18,
+  /** Stop typed at terminal */
+  TSTP = 19,
+  /** Terminal input for background process */
+  TTIN = 20,
+  /** Terminal output for background process */
+  TTOU = 21,
+  /** Urgent condition on socket */
+  Urgent = 22,
+  /** CPU time limit exceeded */
+  XCPU = 23,
+  /** File size limit exceeded */
+  XFSZ = 24,
+  /** Virtual alarm clock */
+  VirtualAlarm = 25,
+  /** Profiling time expired */
+  Profiling = 26,
+  /** Window resize signal */
+  Winch = 27,
+  /** I/O now possible */
+  IO = 28,
+  /** Pollable event */
+  Poll = 29,
+  /** Power failure */
+  Power = 30,
+  /** Bad argument to routine */
+  Sys = 31
 }
