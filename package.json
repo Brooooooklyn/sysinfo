@@ -24,7 +24,7 @@
   "license": "MIT",
   "devDependencies": {
     "@napi-rs/cli": "^3.0.3",
-    "ava": "^6.4.1",
+    "ava": "^7.0.0",
     "oxlint": "^1.8.0",
     "systeminformation": "^5.27.7"
   },
