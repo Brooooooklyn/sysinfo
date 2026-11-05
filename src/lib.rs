@@ -138,7 +138,7 @@ pub struct CpuFeaturesFlags {
 
 #[napi]
 #[cfg(not(any(target_arch = "x86", target_arch = "x86_64")))]
-pub fn cpu_features() -> CpuFeatures {
+pub fn cpu_features() -> Result<CpuFeatures> {
   #[cfg(target_arch = "aarch64")]
   use std::arch::is_aarch64_feature_detected;
 
@@ -146,9 +146,10 @@ pub fn cpu_features() -> CpuFeatures {
 
   let sysinfo = sysinfo::System::new_with_specifics(
     RefreshKind::everything().with_cpu(CpuRefreshKind::everything()),
-  );
+  )
+  .map_err(|e| Error::new(Status::GenericFailure, e.to_string()))?;
   let cpu = &sysinfo.cpus()[0];
-  CpuFeatures {
+  Ok(CpuFeatures {
     arch: std::env::consts::ARCH.to_string(),
     brand: Some(cpu.brand().to_string()),
     family: None,
@@ -212,7 +213,7 @@ pub fn cpu_features() -> CpuFeatures {
       vfp3: false,
       vfp4: false,
     },
-  }
+  })
 }
 
 #[napi]
