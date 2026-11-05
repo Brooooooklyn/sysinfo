@@ -1,7 +1,7 @@
 #![deny(clippy::all)]
 
 use cpu::Cpu;
-use napi::{bindgen_prelude::Reference, Env, Result};
+use napi::{bindgen_prelude::Reference, Env, Error, Result, Status};
 
 use napi_derive::napi;
 
@@ -329,10 +329,10 @@ pub struct SysInfo {
 #[napi]
 impl SysInfo {
   #[napi(constructor)]
-  pub fn new() -> Self {
-    Self {
-      system: sysinfo::System::new_with_specifics(sysinfo::RefreshKind::everything()),
-    }
+  pub fn new() -> Result<Self> {
+    let system = sysinfo::System::new_with_specifics(sysinfo::RefreshKind::everything())
+      .map_err(|e| Error::new(Status::GenericFailure, e.to_string()))?;
+    Ok(Self { system })
   }
 
   #[napi]
@@ -383,37 +383,37 @@ impl SysInfo {
 
   #[napi]
   pub fn uptime(&self) {
-    sysinfo::System::uptime();
+    let _ = sysinfo::System::uptime();
   }
 
   #[napi]
   pub fn boot_time(&self) -> u64 {
-    sysinfo::System::boot_time()
+    sysinfo::System::boot_time().unwrap_or_default()
   }
 
   #[napi]
   pub fn system_name(&self) -> Option<String> {
-    sysinfo::System::name()
+    sysinfo::System::name().ok()
   }
 
   #[napi]
   pub fn long_os_version(&self) -> Option<String> {
-    sysinfo::System::long_os_version()
+    sysinfo::System::long_os_version().ok()
   }
 
   #[napi]
   pub fn host_name(&self) -> Option<String> {
-    sysinfo::System::host_name()
+    sysinfo::System::host_name().ok()
   }
 
   #[napi]
   pub fn kernel_version(&self) -> Option<String> {
-    sysinfo::System::kernel_version()
+    sysinfo::System::kernel_version().ok()
   }
 
   #[napi]
   pub fn os_version(&self) -> Option<String> {
-    sysinfo::System::os_version()
+    sysinfo::System::os_version().ok()
   }
 
   #[napi]
@@ -423,7 +423,7 @@ impl SysInfo {
 
   #[napi]
   pub fn load_average(&self) -> LoadAvg {
-    sysinfo::System::load_average().into()
+    sysinfo::System::load_average().unwrap_or_default().into()
   }
 
   #[napi]

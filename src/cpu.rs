@@ -238,7 +238,7 @@ pub struct Cpu {
 impl Cpu {
   #[napi]
   pub fn usage(&self) -> f32 {
-    self.inner.cpu_usage()
+    self.inner.usage()
   }
 
   #[cfg(not(all(target_arch = "aarch64", target_os = "macos")))]
